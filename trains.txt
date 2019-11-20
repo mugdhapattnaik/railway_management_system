@@ -1,5 +1,0 @@
-A121    Bangalore   Mysore  12:30 PM
-B349    Bangalore   Hyderabad   1:30 PM  
-C275    Mumbai  Delhi   8:15 AM
-D682    Goa    Bangalore    4:30 PM
-E419    Varanasi    Delhi   6:30 AM

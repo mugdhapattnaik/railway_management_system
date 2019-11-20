@@ -2,18 +2,18 @@
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
-#define SIZE 10000;
+#define SIZE 1000
 
 void menu();
-void empmenu();
+void empmenu(FILE *, FILE *);
 void startagain();
 
-struct tm {
-   int tm_min;         /* minutes, range 0 to 59           */
-   int tm_hour;        /* hours, range 0 to 23             */
-   int tm_mday;        /* day of the month, range 1 to 31  */
-   int tm_mon;         /* month, range 0 to 11             */
-};
+// struct tm {
+//    int tm_min;         /* minutes, range 0 to 59           */
+//    int tm_hour;        /* hours, range 0 to 23             */
+//    int tm_mday;        /* day of the month, range 1 to 31  */
+//    int tm_mon;         /* month, range 0 to 11             */
+// };
 
 typedef struct Trains{
     char tno[10];
@@ -22,18 +22,21 @@ typedef struct Trains{
     struct tm *date;
 }train;
 
-FILE *tptr = fopen("C:\Users\nehas\Documents\GitHub\railway_management_system\trains.txt","r");
+char data[SIZE];
+
 
 
 int main()
 {
+    FILE *tptr = fopen("trains.txt","w+");
+    FILE *ptr = fopen("data.txt","w+");
     printf("Are you a passenger or an employee?\n");
     printf("If you are an employee, enter 1.\n If you are a passenger, enter 2.");
     int q;
     scanf("%d",&q);
     if(q==1)
     {
-        empmenu();
+        empmenu(tptr,ptr);
     }
     else if(q==2)
     {
@@ -110,7 +113,23 @@ void startagain()
     }
 }
 
-void empmenu()
+void empmenu(FILE *a, FILE *b)
 {
-    
+    a = fopen("trains.txt","w+");
+    b = fopen("data.txt","w+");
+    printf("Do you want to add train data?\n");
+    printf("To add train data, enter 1. \n To view data, enter 2.\n");
+    int w;
+    scanf("%d",&w);
+    if(w==1)
+    {
+        printf("Enter contents to store in file : \n");
+        fgets(data,SIZE,a);
+        fputs(data, a);
+        printf("File created and saved successfully.\n");
+    }
+    else if(w==2)
+    {
+        menu();
+    }
 }
