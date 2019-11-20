@@ -8,12 +8,11 @@ void menu();
 void empmenu(FILE *, FILE *);
 void startagain();
 
-// struct tm {
-//    int tm_min;         /* minutes, range 0 to 59           */
-//    int tm_hour;        /* hours, range 0 to 23             */
-//    int tm_mday;        /* day of the month, range 1 to 31  */
-//    int tm_mon;         /* month, range 0 to 11             */
-// };
+struct tm {
+   int tm_hour;        /* hours, range 0 to 23             */
+   int tm_mday;        /* day of the month, range 1 to 31  */
+   int tm_mon;         /* month, range 0 to 11             */
+};
 
 typedef struct Trains{
     char tno[10];
