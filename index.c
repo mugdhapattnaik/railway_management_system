@@ -86,7 +86,7 @@ int reserve(node *start)
 }
 
 // NEHAAAAAAAAAAA
-//CHECK IF THIS CANCEL THING IS WORKING 
+//CHECK IF THIS CANCEL THING IS WORKING DURING EXECUTION
 
 int cancel(int reg)
 {
@@ -235,3 +235,4 @@ int main()
         }
     }
 }
+
