@@ -3,13 +3,28 @@ Railway reservation using linked lists and queues-
 If reservation is full, put them in waiting list(queue) and give them a waiting list number.
 A passenger may cancel their ticket if they want to; in this case, the passenger's ticket(in waiting list) is booked automatically.
 Display all the contents of reserved passengers.
-
 */
 
 #include<stdio.h>
 #include<stdlib.h>
 #include<malloc.h>
-#define size 2
+#define size 10
+#define SIZE 1000
+
+void menu();
+void empmenu(FILE *);
+void startagain();
+
+
+typedef struct Trains{
+    char tno[10];
+    char source[100];
+    char dest[100];
+    char date[100];
+}train;
+
+train t[100];
+
 
 
 typedef struct NODE
@@ -17,6 +32,7 @@ typedef struct NODE
 	int reg_no;
 	int age;
 	char name[20];
+    char tno[20];
 	struct NODE *next;
 } node;
 
@@ -42,6 +58,8 @@ void create( )
 	scanf("%s", new->name);
 	printf("Age : ");
 	scanf("%d", &new->age);
+    printf("Train number: ");
+    scanf("%d", &new->tno);
 	start=new;
 	new->next=NULL;
 	reg_num++;	
@@ -67,6 +85,8 @@ int reserve(node *start)
         scanf("%s", new_node->name);
         printf("Age : ");
         scanf("%d", &new_node->age);
+        printf("Train number: ");
+        scanf("%d", &new_node->tno);
         new_node->next=NULL;
 
         if(reg_num<size)
@@ -177,8 +197,8 @@ void display_booked()
 	while(temp!=NULL)
 	{
 		printf("\nRegistration Number: %d\n", temp->reg_no);
-		printf("Name : %s\n\n", temp->name);
-		printf("Age : %d\n",temp->age);
+		printf("Name : %s\n", temp->name);
+        printf("Train number: %s\n", temp->tno);
 		temp=temp->next;
     }    
 }
@@ -199,8 +219,67 @@ void display_booked()
 	}
 }*/
 
+
+void readFile(FILE * fPtr)
+{
+    char ch;
+
+    do 
+    {
+        ch = fgetc(fPtr);
+
+        putchar(ch);
+
+    } while (ch != EOF);
+}
+
+void empmenu(FILE *a)
+{
+    printf("Do you want to add train data?\n");
+    printf("To add train data, enter 1. \n");
+    int w;
+    scanf("%d",&w);
+    if(w==1)
+    {
+        printf("Enter the number of trains whose details you want to add :\n ");
+        int n;
+        scanf("%d",&n);
+        for(int j=0;j<n;j++)
+        {
+            printf("Enter train number: \n");
+            scanf("%s",&t[j].tno);
+            fgets(t[j].tno, SIZE, stdin);
+            fputs(t[j].tno,a);
+            freopen("trains.txt","r",a);
+            printf("Enter Source: \n");
+            scanf("%s",&t[j].source);
+            fgets(t[j].source, SIZE, stdin);
+            fputs(t[j].source,a);
+            freopen("trains.txt","r",a);
+            printf("Enter destination: \n");
+            scanf("%s",&t[j].dest);
+            fgets(t[j].dest, SIZE, stdin);
+            fputs(t[j].dest,a);
+            freopen("trains.txt","r",a);
+            printf("Enter departure date: \n");
+            scanf("%s",&t[j].date);
+            fgets(t[j].date, SIZE, stdin);
+            fputs(t[j].date,a);
+            freopen("trains.txt","r",a);
+
+            printf("\nSuccessfully appended data to file. \n");
+
+        }
+
+    }
+}
+
+
+
 int main()
 {
+    FILE *tptr;
+    tptr = fopen("trains.txt", "a");
 	int choice, status=0,canc=0, reg=0;
 	start=rear=front=NULL;	
 	printf("\n\t\t\t-x-x-x-RAILWAY RESERVATION-x-x-x-\t\t\t\t\n");
@@ -211,50 +290,60 @@ int main()
     scanf("%d",&q);
     if(q==1)
     {
-        //NEHAAAAAAAAAAAAA 
-        //IMPLEMENT THE TRAIN DATABASE USING LINKED LIST
-        FILE *tptr = fopen("trains.txt","w+");
-        FILE *ptr = fopen("data.txt","w+");
-        //empmenu(tptr,ptr);
+        
+        empmenu(tptr);
+        freopen("trains.txt","r",tptr);
+        readFile(tptr);
+        fclose(tptr);
     }
     else if(q==2)
-    {       
-        while(ch!=4)
+    {     
+        printf("To search by categories, enter 1. \n To book tickets, enter 2. \n");
+        int e;
+        scanf("%d",&e);
+        if(e==1)
         {
-            printf("\n\nDo you want to - \n 1. Reserve a ticket? \n 2. Cancel Booking \n 3. Display booked passenger details \n 4. Display waiting list passenger details \n 5. exit\n\n");
-            scanf("%d", &choice); 
-            switch(choice)
-            {	
-                case 1: status=reserve(start);
-                        if(status==0)
-                            printf("\nBooking Full!\nYou are added to the waiting list. Waiting list number %d", count);
-                        else
-                            printf(" \nBooking Successful. Reg no:%d\n\n", reg_num);    
-						break;
-                    
-                case 2: printf(" \n Enter the Registration number to be cancelled\n");
-                        scanf(" %d", &reg);
-                        if(reg>reg_num)
-                            printf("Invalid");
-                        else
-                        {
-                            canc=cancel(reg);
-                            if(canc==-1)
-                                printf("\nRegistration number invalid\n");
+            readFile(tptr);
+        }  
+        else if(e==2)
+        {
+             while(ch!=4)
+            {
+                printf("\n\nDo you want to - \n 1. Reserve a ticket? \n 2. Cancel Booking \n 3. Display passenger details \n 4. exit\n\n");
+                scanf("%d", &choice); 
+                switch(choice)
+                {	
+                    case 1: status=reserve(start);
+                            if(status==0)
+                                printf("\nBooking Full!\nYou are added to the waiting list. Waiting list number %d", count);
                             else
-                                printf("\nRegistration cancelled successfully\n");
-                        }
-                        break;
+                                printf(" \nBooking Successful. Reg no:%d\n\n", reg_num);    
+                            break;
+                    
+                    case 2: printf(" \n Enter the Registration number to be cancelled\n");
+                            scanf(" %d", &reg);
+                            if(reg>reg_num)
+                                printf("Invalid");
+                            else
+                            {
+                                canc=cancel(reg);
+                                if(canc==-1)
+                                    printf("\nRegistration number invalid\n");
+                                else
+                                    printf("\nRegistration cancelled successfully\n");
+                             }
+                            break;
                         
-                case 3: display_booked();
-                        break;
-				case 4: display_wait();
-                        break;
-                case 5: exit(0);   
-                        break;
-                default: printf("\nWrong choice!\n");
+                    case 3: display();
+                            break;
+                    case 4: exit(0);   
+                            break;
+                    default: printf("\nWrong choice!\n");
             }
         }
+       
+     }
+
+        
     }
 }
-
