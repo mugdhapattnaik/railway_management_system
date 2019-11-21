@@ -5,43 +5,45 @@
 #define SIZE 1000
 
 void menu();
-void empmenu(FILE *, FILE *);
+void empmenu(FILE *);
 void startagain();
 
-// struct tm {
-//    int tm_min;         /* minutes, range 0 to 59           */
-//    int tm_hour;        /* hours, range 0 to 23             */
-//    int tm_mday;        /* day of the month, range 1 to 31  */
-//    int tm_mon;         /* month, range 0 to 11             */
-// };
 
 typedef struct Trains{
     char tno[10];
     char source[100];
     char dest[100];
-    struct tm *date;
+    char date[100];
 }train;
 
-char data[SIZE];
-
+train t[100];
 
 
 int main()
 {
-    FILE *tptr = fopen("trains.txt","w+");
-    FILE *ptr = fopen("data.txt","w+");
+    FILE *tptr;
+    tptr = fopen("trains.txt", "a");
     printf("Are you a passenger or an employee?\n");
-    printf("If you are an employee, enter 1.\n If you are a passenger, enter 2.");
+    printf("If you are an employee, enter 1.\n  If you are a passenger, enter 2. \n To view the entire train schedule, enter 3. ");
     int q;
     scanf("%d",&q);
     if(q==1)
     {
-        empmenu(tptr,ptr);
+        empmenu(tptr);
+        freopen("trains.txt","r",tptr);
+        readFile(tptr);
+        fclose(tptr);
     }
     else if(q==2)
     {
         menu();
     }
+    else if(q==3)
+    {
+        
+    }
+
+
 }
 
 
@@ -52,43 +54,26 @@ void menu()
     char s[100];
     char d[100];
     int p;
-    printf("\n1.Display all scheduled trains\n");
-    printf("2.Search train by source/starting place\n" );
-    printf("3.Search train by destination\n");
-    printf("4.Search by train number\n");
-    printf("5.Search by date\n");
-    printf("6.Book train\n");
+    printf("1.Search train by source/starting place\n" );
+    printf("2.Search train by destination\n");
+    printf("3.Search by train number\n");
+    printf("4.Search by date\n");
 
     printf("Enter your choice :\n");
     scanf("%d", &x);
     switch(x)
     {
-        case 1: printf("SCHEDULED TRAINS\n");
+
+        case 1: printf("source lol\n");
                 break;
 
-        case 2: printf("source lol\n");
+        case 2: printf("destination lol\n");
                 break;
 
-        case 3: printf("destination lol\n");
+        case 3: printf("train number lol\n");
                 break;
 
-        case 4: printf("train number lol\n");
-                break;
-
-        case 5: printf("date lol\n");
-                break;
-               
-        case 6 :printf("Enter number of passengers : ");
-                scanf("%d",&p);
-                for(int i=0;i<p;i++)
-                {
-                    printf("Enter passenger%d name :  ",(i+1));
-                    scanf("%s",&n);
-                }
-                printf("Enter source/starting place :  ");
-                scanf("%s",&s);
-                printf("Enter destination :  ");
-                scanf("%s",&d);
+        case 4: printf("date lol\n");
                 break;
 
 
@@ -113,23 +98,70 @@ void startagain()
     }
 }
 
-void empmenu(FILE *a, FILE *b)
+void readFile(FILE * fPtr)
 {
-    a = fopen("trains.txt","w+");
-    b = fopen("data.txt","w+");
+    char ch;
+
+    do 
+    {
+        ch = fgetc(fPtr);
+
+        putchar(ch);
+
+    } while (ch != EOF);
+}
+
+void empmenu(FILE *a)
+{
     printf("Do you want to add train data?\n");
     printf("To add train data, enter 1. \n To view data, enter 2.\n");
     int w;
     scanf("%d",&w);
     if(w==1)
     {
-        printf("Enter contents to store in file : \n");
-        fgets(data,SIZE,a);
-        fputs(data, a);
-        printf("File created and saved successfully.\n");
+        printf("Enter the number of trains whose details you want to add :\n ");
+        int n;
+        scanf("%d",&n);
+        for(int j=0;j<n;j++)
+        {
+            printf("Enter train number: \n");
+            scanf("%s",&t[j].tno);
+            fgets(t[j].tno, SIZE, stdin);
+            fputs(t[j].tno,a);
+            freopen("trains.txt","r",a);
+            printf("Enter Source: \n");
+            scanf("%s",&t[j].source);
+            fgets(t[j].source, SIZE, stdin);
+            fputs(t[j].source,a);
+            freopen("trains.txt","r",a);
+            printf("Enter destination: \n");
+            scanf("%s",&t[j].dest);
+            fgets(t[j].dest, SIZE, stdin);
+            fputs(t[j].dest,a);
+            freopen("trains.txt","r",a);
+            printf("Enter departure date: \n");
+            scanf("%s",&t[j].date);
+            fgets(t[j].date, SIZE, stdin);
+            fputs(t[j].date,a);
+            freopen("trains.txt","r",a);
+
+            printf("\nSuccessfully appended data to file. \n");
+
+        }
+
     }
     else if(w==2)
     {
-        menu();
+       menu();
+       startagain();
     }
+}
+
+void tdisplay(train a)
+{
+    printf("Train number : %s  ",a.tno);
+    printf("Source/starting point : %s  ",a.source);
+    printf("Destination : %s  ",a.dest);
+    printf("Date and Time : %s  ",a.date);
+
 }
