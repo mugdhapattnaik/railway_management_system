@@ -9,7 +9,7 @@ Display all the contents of reserved passengers.
 #include<stdio.h>
 #include<stdlib.h>
 #include<malloc.h>
-#define size 10
+#define size 2
 
 
 typedef struct NODE
@@ -69,7 +69,7 @@ int reserve(node *start)
         scanf("%d", &new_node->age);
         new_node->next=NULL;
 
-        if(reg_num<=size)
+        if(reg_num<size)
         {
             reg_num++;
             new_node->reg_no=reg_num;
@@ -95,16 +95,17 @@ int cancel(int reg)
 	if(start==NULL)
 	return -1;
 	if(ptr->next==NULL && ptr->reg_no==reg)
-		{
+	{
 		start=NULL;
 		reg_num--;
 		free(ptr);
 		return 1;
 		
-		}
+	}
 		
-	else{	
-	while(ptr->reg_no!=reg && ptr->next!=NULL)
+	else
+	{	
+		while(ptr->reg_no!=reg && ptr->next!=NULL)
 		{
 			preptr=ptr;
 			ptr=ptr->next;
@@ -115,9 +116,11 @@ int cancel(int reg)
 			preptr->next=ptr->next;
 		free(ptr);
 		new=deq();
+
 		while(preptr->next!=NULL)
 			preptr=preptr->next;
 		preptr->next=new;
+		new->reg_no=preptr->reg_no+1;
 		reg_num--;
 		return 1;
 	
@@ -131,6 +134,7 @@ void enq(node *new_node)
 		rear=new_node;
 		rear->next=NULL;
 		front=rear;
+		new_node->reg_no=1;
 	}
 	else
 	{
@@ -138,14 +142,14 @@ void enq(node *new_node)
 		rear->next=temp;
 		temp->next=NULL;
 		rear=temp;
+		new_node->reg_no++;
 	}
 	count++;
 }
 
 node* deq()
 {
-	node *front1;
-	front1=front;
+	node *front1=front;
 	if(front==NULL)
 		return NULL;
 	else
@@ -167,17 +171,33 @@ node* deq()
 	}
 }
 
-void display()
+void display_booked()
 {
 	node *temp=start;
 	while(temp!=NULL)
 	{
 		printf("\nRegistration Number: %d\n", temp->reg_no);
 		printf("Name : %s\n\n", temp->name);
+		printf("Age : %d\n",temp->age);
 		temp=temp->next;
     }    
 }
 
+/*void display_wait()
+{
+	printf("\nwyeah %s\n",front->next->name);
+	node *temp=front;
+	if(!temp)
+		printf("\nEmpty waiting list");
+	else{
+		while(!temp){
+			printf("\nRegistration Number: %d\n", temp->reg_no);
+			printf("Name : %s\n\n", temp->name);
+			printf("Age : %d\n",temp->age);
+			temp=temp->next;
+		}
+	}
+}*/
 
 int main()
 {
@@ -201,7 +221,7 @@ int main()
     {       
         while(ch!=4)
         {
-            printf("\n\nDo you want to - \n 1. Reserve a ticket? \n 2. Cancel Booking \n 3. Display passenger details \n 4. exit\n\n");
+            printf("\n\nDo you want to - \n 1. Reserve a ticket? \n 2. Cancel Booking \n 3. Display booked passenger details \n 4. Display waiting list passenger details \n 5. exit\n\n");
             scanf("%d", &choice); 
             switch(choice)
             {	
@@ -210,7 +230,7 @@ int main()
                             printf("\nBooking Full!\nYou are added to the waiting list. Waiting list number %d", count);
                         else
                             printf(" \nBooking Successful. Reg no:%d\n\n", reg_num);    
-                        break;
+						break;
                     
                 case 2: printf(" \n Enter the Registration number to be cancelled\n");
                         scanf(" %d", &reg);
@@ -226,9 +246,11 @@ int main()
                         }
                         break;
                         
-                case 3: display();
+                case 3: display_booked();
                         break;
-                case 4: exit(0);   
+				case 4: display_wait();
+                        break;
+                case 5: exit(0);   
                         break;
                 default: printf("\nWrong choice!\n");
             }
